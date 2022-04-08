@@ -36,8 +36,10 @@ io.on('connection', async (socket) => {
     io.emit('champLog', champs)
     socket.emit("chatLog", indexLog);
     socket.on('message', data => {
-        console.log("hola");
-        // io.emit("chatLog", indexLog)
+        console.log(data);
+        data.time = moment().format("HH:mm:ss DD/MM/YYYY")
+        indexLog.push(data)
+        io.emit("chatLog", indexLog)
     })
     socket.on('sentChamp', async (data) => {
         await champService.addChamp(data)

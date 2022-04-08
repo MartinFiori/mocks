@@ -1,5 +1,5 @@
 const socket = io();
-let user;
+let user = {};
 const form = document.getElementById('champForm');
 const input = document.getElementById('chatInput');
 const chatLog = document.getElementById('chatLog');
@@ -47,6 +47,7 @@ const userInfo = async () => {
             userLoged.author.alias = document.getElementById('swal-input4').value
             userLoged.author.avatar = document.getElementById('swal-input5').value
             userLoged.author.id = document.getElementById('swal-input6').value
+            user.user = document.getElementById('swal-input6').value
         }
     })
     if (formValues) {
@@ -59,11 +60,8 @@ userInfo()
 input.addEventListener('keyup', (e) => {
     if (e.key === "Enter") {
         inputValue = input.value.trim()
-        // console.log(inputValue)
-        socket.emit('message', {
-            user: user,
-            message: inputValue
-        })
+        user.message = inputValue
+        socket.emit('message', user)
         userLoged.text.message = input.value.trim()
         socket.emit('userInfo', userLoged)
         input.value = "";
@@ -86,9 +84,9 @@ socket.on('chatLog', data => {
         console.log(message)
         messages += `
                     <div class="chatMessage">
-                        <p class="email">${message.log.text.id}:</p>
-                        <p class="time">${message.log.text.time}</p>
-                        <p class="message">${message.log.text.message}</p>
+                        <p class="email">${message.user}:</p>
+                        <p class="time">${message.time}</p>
+                        <p class="message">${message.message}</p>
                     </div>
                     `
     });
